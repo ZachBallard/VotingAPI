@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace VotingAPI
 {
@@ -44,6 +45,7 @@ namespace VotingAPI
     public class Voter
     {
         public int Id { get; set; }
+        [Required]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Token { get; set; } //will be guid to string()
