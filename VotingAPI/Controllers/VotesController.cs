@@ -1,9 +1,14 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
+using VotingAPI;
 using VotingAPI.Models;
 
 namespace VotingAPI.Controllers
@@ -79,6 +84,22 @@ namespace VotingAPI.Controllers
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = vote.Id }, vote);
+        }
+
+        // DELETE: api/Votes/5
+        [ResponseType(typeof(Vote))]
+        public IHttpActionResult DeleteVote(int id)
+        {
+            Vote vote = db.Votes.Find(id);
+            if (vote == null)
+            {
+                return NotFound();
+            }
+
+            db.Votes.Remove(vote);
+            db.SaveChanges();
+
+            return Ok(vote);
         }
 
         protected override void Dispose(bool disposing)
