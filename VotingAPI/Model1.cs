@@ -46,7 +46,7 @@ namespace VotingAPI
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public Guid Token { get; set; }
+        public string Token { get; set; } //will be guid to string()
         public string Party { get; set; }
         public virtual Vote Vote { get; set; }
     }
