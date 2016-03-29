@@ -1,0 +1,23 @@
+Voters Controller:
+  GET all voters - api/Voters/{token}*
+  PUT update a voter - api/Voters/{token}* (send a voter in the body to replace voter with token)
+  Post create a voter - api/Voters (send a voter in the body to add to database)
+  
+Candidates Controller:
+  GET all candidates - api/Candidates
+  GET get specific candidate - api/Candidates/{id} (where id is an existing Candidates id)
+  POST a new candidate - api/Candidates (send a voter in the body to add to the database)
+  
+Races Controller:
+  GET get all races - api/Races
+  GET get specific race - api/Races/{id} (where {id} is an existing races id)
+  
+Votes Controller
+  GET all votes for each candidate - api/Votes 
+    (THIS ONE RETURNS ALL CANDIDATES FOLLOWED BY NUMBER OF VOTES)
+  POST post a vote - api/Votes/{token}*/{id} (where {id} is an existing candidates id)
+    (THIS ONE WILL ADD A VOTE TO THE CANDIDATE WITH THE ID PROVIDED)
+  DELETE delete a vote from a voter - api/VOTES/{token}*
+  
+  
+  * where {token} is a parameter use the GUID string within a created voter
