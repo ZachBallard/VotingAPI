@@ -11,7 +11,7 @@ namespace VotingAPI.Controllers
     public class CandidatesController : ApiController
     {
         private VotingAPIContext db = new VotingAPIContext();
-
+        
         // GET: api/Candidates
         public IQueryable<Candidate> GetCandidates()
         {
@@ -31,41 +31,6 @@ namespace VotingAPI.Controllers
             return Ok(candidate);
         }
 
-        // PUT: api/Candidates/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutCandidate(int id, Candidate candidate)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != candidate.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(candidate).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!CandidateExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
         // POST: api/Candidates
         [ResponseType(typeof(Candidate))]
         public IHttpActionResult PostCandidate(Candidate candidate)
@@ -79,20 +44,6 @@ namespace VotingAPI.Controllers
             db.SaveChanges();
 
             return CreatedAtRoute("DefaultApi", new { id = candidate.Id }, candidate);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool CandidateExists(int id)
-        {
-            return db.Candidates.Count(e => e.Id == id) > 0;
         }
     }
 }

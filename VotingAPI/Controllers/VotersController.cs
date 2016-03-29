@@ -17,17 +17,11 @@ namespace VotingAPI.Controllers
     {
         private VotingAPIContext db = new VotingAPIContext();
 
-        // GET: api/Voters
-        public IQueryable<Voter> GetVoters()
-        {
-            return db.Voters;
-        }
-
-        // GET: api/Voters/5
+        [Route("api/Voters/{token}")]
         [ResponseType(typeof(Voter))]
-        public IHttpActionResult GetVoter(int id)
+        public IHttpActionResult GetVoter(string token)
         {
-            Voter voter = db.Voters.Find(id);
+            Voter voter = db.Voters.Find(token);
             if (voter == null)
             {
                 return NotFound();
@@ -35,17 +29,16 @@ namespace VotingAPI.Controllers
 
             return Ok(voter);
         }
-
-        // PUT: api/Voters/5
+        [Route("api/Voters/{token}")]
         [ResponseType(typeof(void))]
-        public IHttpActionResult PutVoter(int id, Voter voter)
+        public IHttpActionResult PutVoter(string token, Voter voter)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != voter.Id)
+            if (token != voter.Token)
             {
                 return BadRequest();
             }
@@ -58,7 +51,7 @@ namespace VotingAPI.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!VoterExists(id))
+                if (!VoterExists(token))
                 {
                     return NotFound();
                 }
@@ -86,34 +79,9 @@ namespace VotingAPI.Controllers
             return CreatedAtRoute("DefaultApi", new { id = voter.Id }, voter);
         }
 
-        // DELETE: api/Voters/5
-        [ResponseType(typeof(Voter))]
-        public IHttpActionResult DeleteVoter(int id)
+        private bool VoterExists(string token)
         {
-            Voter voter = db.Voters.Find(id);
-            if (voter == null)
-            {
-                return NotFound();
-            }
-
-            db.Voters.Remove(voter);
-            db.SaveChanges();
-
-            return Ok(voter);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
-
-        private bool VoterExists(int id)
-        {
-            return db.Voters.Count(e => e.Id == id) > 0;
+            return db.Voters.Count(e => e.Token == token) > 0;
         }
     }
 }

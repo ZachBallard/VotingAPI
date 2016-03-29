@@ -18,88 +18,63 @@ namespace VotingAPI.Controllers
         private VotingAPIContext db = new VotingAPIContext();
 
         // GET: api/Votes
-        public IQueryable<Vote> GetVotes()
+        public List<string> GetVotes()
         {
-            return db.Votes;
+            var votesAndCandidates = new List<string>();
+
+            foreach (var c in db.Candidates)
+            {
+                string fullstring = $"{c.LastName}, {c.FirstName} has {c.Votes.Count} votes";
+                votesAndCandidates.Add(fullstring);
+            }
+
+            return votesAndCandidates;
         }
 
-        // GET: api/Votes/5
-        [ResponseType(typeof(Vote))]
-        public IHttpActionResult GetVote(int id)
-        {
-            Vote vote = db.Votes.Find(id);
-            if (vote == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(vote);
-        }
-
-        // PUT: api/Votes/5
-        [ResponseType(typeof(void))]
-        public IHttpActionResult PutVote(int id, Vote vote)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != vote.Id)
-            {
-                return BadRequest();
-            }
-
-            db.Entry(vote).State = EntityState.Modified;
-
-            try
-            {
-                db.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!VoteExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return StatusCode(HttpStatusCode.NoContent);
-        }
-
+        [Route("api/Votes/{token}/{id}")]
         // POST: api/Votes
         [ResponseType(typeof(Vote))]
-        public IHttpActionResult PostVote(Vote vote)
+        public string PostVote(string token, int id, Vote vote)
         {
-            if (!ModelState.IsValid)
+            bool isValidToken = false;
+            if (id <= db.Candidates.Local.Count)
             {
-                return BadRequest(ModelState);
+                foreach (var v in db.Voters)
+                {
+                    if (v.Token == token)
+                    {
+                        isValidToken = true;
+                        break;
+                    }
+                }
+
+                if (isValidToken)
+                {
+                    db.Votes.Add(vote);
+                    db.SaveChanges();
+                    return "Vote has been cast";
+                }
             }
 
-            db.Votes.Add(vote);
-            db.SaveChanges();
-
-            return CreatedAtRoute("DefaultApi", new { id = vote.Id }, vote);
+            return "Invalid token, candidate id, or vote";
         }
 
+        [Route("api/Votes/{token}")]
         // DELETE: api/Votes/5
         [ResponseType(typeof(Vote))]
-        public IHttpActionResult DeleteVote(int id)
+        public IHttpActionResult DeleteVote(string token)
         {
-            Vote vote = db.Votes.Find(id);
-            if (vote == null)
+            Voter voter = db.Voters.Find(token);
+            
+            if (voter.Vote == null)
             {
                 return NotFound();
             }
 
-            db.Votes.Remove(vote);
+            db.Votes.Remove(voter.Vote);
             db.SaveChanges();
 
-            return Ok(vote);
+            return Ok();
         }
 
         protected override void Dispose(bool disposing)

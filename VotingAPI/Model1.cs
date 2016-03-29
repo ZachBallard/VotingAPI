@@ -38,8 +38,9 @@ namespace VotingAPI
     public class Vote
     {
         public int Id { get; set; }
-        public virtual List<Voter> Voters { get; set; } = new List<Voter>();
+        public virtual Candidate Candidate{ get; set; }
         public virtual Race Race { get; set; }
+        public virtual Voter Voter { get; set; }
     }
 
     public class Voter
@@ -69,6 +70,7 @@ namespace VotingAPI
         public string Hometown { get; set; }
         public string District { get; set; }
         public string Party { get; set; }
+        public virtual List<Vote> Votes { get; set; } = new List<Vote>();
         public virtual List<Race> Races { get; set; } = new List<Race>();
     }
 }

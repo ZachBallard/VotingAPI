@@ -14,11 +14,6 @@ namespace VotingAPI
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-            routes.MapRoute(
-                name: "With Key",
-                url: "{controller}/{key}/{action}/{id}",
-                defaults: new {controller = "Home",/*KEY goes here?*/ action = "Index", id = UrlParameter.Optional}
-                );
         }
     }
 }
