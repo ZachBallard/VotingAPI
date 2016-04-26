@@ -26,10 +26,7 @@ namespace VotingAPI.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            
-            context.Candidates.AddOrUpdate(
-                );
-
+           
         }
     }
 }

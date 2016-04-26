@@ -18,17 +18,9 @@ namespace VotingAPI.Controllers
         private VotingAPIContext db = new VotingAPIContext();
 
         // GET: api/Votes
-        public List<string> GetVotes()
+        public List<Candidate> GetVotes()
         {
-            var votesAndCandidates = new List<string>();
-
-            foreach (var c in db.Candidates)
-            {
-                string fullstring = $"{c.LastName}, {c.FirstName} has {c.Votes.Count} votes";
-                votesAndCandidates.Add(fullstring);
-            }
-
-            return votesAndCandidates;
+            return db.Candidates.ToList();
         }
 
         [Route("api/Votes/{token}/{id}")]
